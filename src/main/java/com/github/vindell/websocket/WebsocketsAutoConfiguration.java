@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
@@ -18,7 +19,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import com.github.vindell.websocket.annotation.MessageRule;
@@ -44,7 +44,6 @@ import com.github.vindell.websocket.session.handler.chain.def.PathMatchingHandle
  * @version 	V1.0
  */
 @Configuration
-@EnableWebSocketMessageBroker
 @EnableConfigurationProperties({ WebsocketsProperties.class })
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class WebsocketsAutoConfiguration implements ApplicationContextAware {
@@ -68,15 +67,15 @@ public class WebsocketsAutoConfiguration implements ApplicationContextAware {
 		return new HandshakeSessionInterceptor();
 	}
 	
-	@Bean
-	@ConditionalOnMissingBean
+	@Bean("broadcastSessionFilter")
+	@ConditionalOnMissingBean(name = "broadcastSessionFilter")
 	public SessionFilter sessionFilter(WebsocketsProperties properties) {
 		return SessionFilter.ALL;
 	}
-
+	
 	@Bean("broadcastWebSocketsHandler")
 	public BroadcastWebSocketsHandler broadcastWebSocketsHandler(WebsocketsProperties properties,
-			SessionFilter filter) {
+			@Qualifier("broadcastSessionFilter") SessionFilter filter) {
 		BroadcastWebSocketsHandler socketsHandler = new BroadcastWebSocketsHandler(filter);
 		return socketsHandler;
 	}

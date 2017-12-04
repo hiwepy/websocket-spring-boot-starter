@@ -69,7 +69,7 @@ public class BroadcastWebSocketsHandler extends TextWebSocketHandler {
 			session.setTextMessageSizeLimit(getMessageSizeLimit());
 		}
 
-		if(SESSION_MAP.put(session.getId(), session) != null) {
+		if(SESSION_MAP.put(session.getId(), session) == null) {
 			onlineCount.incrementAndGet();
 		}
 	}
@@ -94,10 +94,12 @@ public class BroadcastWebSocketsHandler extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
-		LOGGER.debug("[{} : {} closed. {}]", session.getUri(), session.getId(), closeStatus.toString());
-		if(SESSION_MAP.remove(session.getId()) != null) {
-			onlineCount.decrementAndGet();
-			LOGGER.info("Current Online Count: {}", onlineCount.get());
+		if (filter.matches(session)) {
+			LOGGER.debug("[{} : {} closed. {}]", session.getUri(), session.getId(), closeStatus.toString());
+			if(SESSION_MAP.remove(session.getId()) != null) {
+				onlineCount.decrementAndGet();
+				LOGGER.info("Current Online Count: {}", onlineCount.get());
+			}
 		}
 	}
 
@@ -105,7 +107,7 @@ public class BroadcastWebSocketsHandler extends TextWebSocketHandler {
 	 * 给所有在线客户端群发消息
 	 */
 	public void broadcast(final TextMessage message) throws IOException {
-		this.broadcast(SessionFilter.ALL, message);
+		this.broadcast(filter, message);
 	}
 
 	/**

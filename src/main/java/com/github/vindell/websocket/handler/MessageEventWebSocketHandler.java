@@ -1,5 +1,6 @@
 package com.github.vindell.websocket.handler;
 
+import java.io.IOException;
 import java.nio.CharBuffer;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -12,12 +13,14 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import com.google.common.collect.Maps;
 import com.github.vindell.websocket.event.WebSocketMessageEvent;
+import com.github.vindell.websocket.session.SessionFilter;
 import com.github.vindell.websocket.session.handler.AbstractRouteableEventHandler;
 import com.github.vindell.websocket.session.handler.chain.HandlerChain;
 import com.github.vindell.websocket.session.handler.chain.HandlerChainResolver;
 import com.github.vindell.websocket.session.handler.chain.ProxiedHandlerChain;
+import com.github.vindell.websocket.utils.WebSocketUtils;
+import com.google.common.collect.Maps;
 
 /**
  * 
@@ -96,12 +99,30 @@ public class MessageEventWebSocketHandler extends AbstractRouteableEventHandler<
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
 		LOGGER.debug("[{} : {} closed. {}]", session.getUri(), session.getId(), closeStatus.toString());
-		if(SESSION_MAP.remove(session.getId()) != null) {
+		if(SESSION_MAP.remove(session.getId()) != null && onlineCount.get() > 0 ) {
 			onlineCount.decrementAndGet();
 			LOGGER.info("Current Online Count: {}", onlineCount.get());
 		}
 	}
 
+	/**
+	 * 给所有在线客户端群发消息
+	 */
+	public void broadcast(final TextMessage message) throws IOException {
+		this.broadcast(SessionFilter.ALL, message);
+	}
+
+	/**
+	 * 给过滤器筛选后的在线客户端群发消息
+	 */
+	public void broadcast(final SessionFilter filter, final TextMessage message) throws IOException {
+		WebSocketUtils.broadcast(SESSION_MAP, filter, message);
+	}
+
+	public boolean hasConnection() throws IOException {
+		return onlineCount.get() > 0;
+	}
+	
 	@Override
 	public boolean supportsPartialMessages() {
 		return false;

@@ -10,7 +10,7 @@ import org.springframework.web.socket.WebSocketSession;
 public class SessionUriPathFilter implements SessionFilter {
 
 	private PathMatcher matcher = new AntPathMatcher();
-	private String uriPattern = "*";
+	private String uriPattern = "/**";
 	
 	public SessionUriPathFilter(String pattern) {
 		this.uriPattern = pattern;

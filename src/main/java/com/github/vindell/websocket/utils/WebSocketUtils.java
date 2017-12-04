@@ -47,15 +47,13 @@ public class WebSocketUtils {
 			WebSocketSession session = entry.getValue();
 			if(filter.matches(session)) {
 				if (session.isOpen()) {
-					new Thread(() -> {
-						try {
-							if (session.isOpen()) {
-								session.sendMessage(message);
-							}
-						} catch (IOException e) {
-							e.printStackTrace();
+					try {
+						if (session.isOpen()) {
+							session.sendMessage(message);
 						}
-					}).start();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
