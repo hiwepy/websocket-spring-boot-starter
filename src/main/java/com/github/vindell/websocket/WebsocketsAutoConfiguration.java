@@ -19,12 +19,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import com.github.vindell.websocket.annotation.MessageRule;
 import com.github.vindell.websocket.config.Ini;
 import com.github.vindell.websocket.event.WebSocketMessageEvent;
 import com.github.vindell.websocket.handler.BroadcastWebSocketsHandler;
 import com.github.vindell.websocket.handler.MessageEventWebSocketHandler;
+import com.github.vindell.websocket.interceptor.HandshakeSessionInterceptor;
 import com.github.vindell.websocket.session.SessionFilter;
 import com.github.vindell.websocket.session.handler.Nameable;
 import com.github.vindell.websocket.session.handler.WebSocketMessageHandler;
@@ -55,6 +57,17 @@ public class WebsocketsAutoConfiguration implements ApplicationContextAware {
 	 */
 	private Map<String, String> handlerChainDefinitionMap = new HashMap<String, String>();
    
+	@Bean
+	@ConditionalOnMissingBean
+	public ServerEndpointExporter serverEndpointExporter() {
+		return new ServerEndpointExporter();
+	}
+
+	@Bean
+	public HandshakeSessionInterceptor handshakeSessionInterceptor(WebsocketsProperties properties) {
+		return new HandshakeSessionInterceptor();
+	}
+	
 	@Bean
 	@ConditionalOnMissingBean
 	public SessionFilter sessionFilter(WebsocketsProperties properties) {
