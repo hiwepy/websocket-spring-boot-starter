@@ -80,39 +80,6 @@ public class WebsocketsAutoConfiguration implements ApplicationContextAware {
 		return socketsHandler;
 	}
    
-    /**
-	 * Handler实现集合
-	 */
-	@Bean("webSocketMessageHandlers")
-	public Map<String, WebSocketMessageHandler<WebSocketMessageEvent>> webSocketMessageHandlers() {
-
-		Map<String, WebSocketMessageHandler<WebSocketMessageEvent>> disruptorPreHandlers = new LinkedHashMap<String, WebSocketMessageHandler<WebSocketMessageEvent>>();
-
-		Map<String, WebSocketMessageHandler> beansOfType = getApplicationContext().getBeansOfType(WebSocketMessageHandler.class);
-		if (!ObjectUtils.isEmpty(beansOfType)) {
-			Iterator<Entry<String, WebSocketMessageHandler>> ite = beansOfType.entrySet().iterator();
-			while (ite.hasNext()) {
-				Entry<String, WebSocketMessageHandler> entry = ite.next();
-				if (entry.getValue() instanceof MessageEventWebSocketHandler) {
-					// 跳过入口实现类
-					continue;
-				}
-				
-				MessageRule annotationType = getApplicationContext().findAnnotationOnBean(entry.getKey(), MessageRule.class);
-				if(annotationType == null) {
-					// 注解为空，则打印错误信息
-					LOG.error("Not Found AnnotationType {0} on Bean {1} Whith Name {2}", MessageRule.class, entry.getValue().getClass(), entry.getKey());
-				} else {
-					handlerChainDefinitionMap.put(annotationType.value(), entry.getKey());
-				}
-				
-				disruptorPreHandlers.put(entry.getKey(), entry.getValue());
-			}
-		}
-		return disruptorPreHandlers;
-	}
-	 
-	
    /**
     * 
     * @description	：  构造WebSocketMessageEventHandler
@@ -125,7 +92,32 @@ public class WebsocketsAutoConfiguration implements ApplicationContextAware {
 	public MessageEventWebSocketHandler messageEventWebSocketHandler(WebsocketsProperties properties,
 			Map<String, WebSocketMessageHandler<WebSocketMessageEvent>> webSocketMessageHandlers) {
 		
-		HandlerChainManager<WebSocketMessageEvent> manager = createHandlerChainManager(webSocketMessageHandlers, handlerChainDefinitionMap);
+		/**
+		 * 处理器链定义
+		 */
+		Map<String, WebSocketMessageHandler<WebSocketMessageEvent>> webSocketHandlers = new LinkedHashMap<String, WebSocketMessageHandler<WebSocketMessageEvent>>();
+		Map<String, String> handlerChainDefinitionMap = new HashMap<String, String>();
+		
+		Iterator<Entry<String, WebSocketMessageHandler<WebSocketMessageEvent>>> ite = webSocketMessageHandlers.entrySet().iterator();
+		while (ite.hasNext()) {
+			Entry<String, WebSocketMessageHandler<WebSocketMessageEvent>> entry = ite.next();
+			if (entry.getValue() instanceof MessageEventWebSocketHandler) {
+				// 跳过入口实现类
+				continue;
+			}
+			
+			MessageRule annotationType = getApplicationContext().findAnnotationOnBean(entry.getKey(), MessageRule.class);
+			if(annotationType == null) {
+				// 注解为空，则打印错误信息
+				LOG.error("Not Found AnnotationType {0} on Bean {1} Whith Name {2}", MessageRule.class, entry.getValue().getClass(), entry.getKey());
+			} else {
+				handlerChainDefinitionMap.put(annotationType.value(), entry.getKey());
+			}
+			
+			webSocketHandlers.put(entry.getKey(), entry.getValue());
+		}
+		
+		HandlerChainManager<WebSocketMessageEvent> manager = createHandlerChainManager(webSocketHandlers, handlerChainDefinitionMap);
 		PathMatchingHandlerChainResolver chainResolver = new PathMatchingHandlerChainResolver();
 		chainResolver.setHandlerChainManager(manager);
 

@@ -12,13 +12,18 @@ public class WebSocketMessageEvent extends EventObject {
 	private final long timestamp;
 	/** WebSocket Session*/
 	private WebSocketSession session;
+	/** WebSocket message*/
+	private WebSocketMessage<?> message;
 	/** Route Expression*/
 	private String routeExpression;
+	
 	
 	public WebSocketMessageEvent(WebSocketSession session, WebSocketMessage<?> message) {
 		super(message);
 		this.session = session;
+		this.message = message;
 		this.timestamp = System.currentTimeMillis();
+		this.routeExpression = session.getUri().getPath();
 	}
 
 	/**
@@ -30,6 +35,10 @@ public class WebSocketMessageEvent extends EventObject {
 
 	public WebSocketSession getSession() {
 		return session;
+	}
+	
+	public WebSocketMessage<?> getMessage() {
+		return message;
 	}
 
 	public String getRouteExpression() {
