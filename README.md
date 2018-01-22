@@ -19,7 +19,7 @@
 </dependency>
 ```
 
-### Simple
+### Sample
 
-[https://github.com/vindell/spring-boot-starter-samples/tree/master/spring-boot-simple-websocket](https://github.com/vindell/spring-boot-starter-samples/tree/master/spring-boot-simple-websocket "spring-boot-simple-websocket")
+[https://github.com/vindell/spring-boot-starter-samples/tree/master/spring-boot-sample-websocket](https://github.com/vindell/spring-boot-starter-samples/tree/master/spring-boot-sample-websocket "spring-boot-sample-websocket")
 
