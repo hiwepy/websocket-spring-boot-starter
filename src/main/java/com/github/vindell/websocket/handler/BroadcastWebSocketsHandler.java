@@ -13,6 +13,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.google.common.collect.Maps;
+import com.github.vindell.websocket.annotation.SocketHandler;
 import com.github.vindell.websocket.session.SessionFilter;
 import com.github.vindell.websocket.session.SessionOthersFilter;
 import com.github.vindell.websocket.utils.WebSocketUtils;
@@ -25,10 +26,12 @@ import com.github.vindell.websocket.utils.WebSocketUtils;
  * @date		： 2017年12月4日 下午12:11:20
  * @version 	V1.0
  */
+@SocketHandler("broadcast")
 public class BroadcastWebSocketsHandler extends TextWebSocketHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BroadcastWebSocketsHandler.class);
 	private static Map<String, WebSocketSession> SESSION_MAP = Maps.newConcurrentMap();
+	/** 在线人数统计 */
 	private static AtomicInteger onlineCount = new AtomicInteger(0);
 	private long onlineCountLimit = -1;
 	private int messageSizeLimit = -1;
