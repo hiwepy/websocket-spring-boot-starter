@@ -204,7 +204,7 @@ public class WebSocketAutoConfiguration implements WebSocketConfigurer, Applicat
 				// 注解为空，则打印错误信息
 				LOG.error("Not Found AnnotationType {0} on Bean {1} Whith Name {2}", SocketConsumer.class, entry.getValue().getClass(), entry.getKey());
 			} else {
-				String path = StringUtils.hasText(serverProperties.getContextPath()) ? serverProperties.getContextPath() + annotationType.path() : annotationType.path();
+				String path = StringUtils.hasText(serverProperties.getServlet().getContextPath()) ? serverProperties.getServlet().getContextPath() + annotationType.path() : annotationType.path();
 				handlerChainDefinitionMap.put(path, entry.getKey());
 			}
 			
