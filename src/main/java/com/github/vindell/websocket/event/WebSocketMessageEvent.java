@@ -26,9 +26,6 @@ public class WebSocketMessageEvent extends EventObject {
 		this.routeExpression = session.getUri().getPath();
 	}
 
-	/**
-	 * Return the system time in milliseconds when the event happened.
-	 */
 	public final long getTimestamp() {
 		return this.timestamp;
 	}

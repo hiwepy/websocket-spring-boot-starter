@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Inherited		
 public @interface SocketConsumer {
 	
-	/**
+	/*
 	 * Ant风格的事件分发规则表达式
 	 */
 	String path();

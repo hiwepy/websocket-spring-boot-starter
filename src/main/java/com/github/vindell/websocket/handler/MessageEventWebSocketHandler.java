@@ -24,12 +24,7 @@ import com.github.vindell.websocket.utils.WebSocketUtils;
 import com.google.common.collect.Maps;
 
 /**
- * 
- * @className	： MessageEventWebSocketHandler
- * @description	： 可进行消息分发处理的在线广播Socket连接Handler
- * @author 		： <a href="https://github.com/vindell">vindell</a>
- * @date		： 2017年12月4日 下午12:11:34
- * @version 	V1.0
+ * 可进行消息分发处理的在线广播Socket连接Handler
  */
 @SocketHandler("dispatch")
 public class MessageEventWebSocketHandler extends AbstractRouteableEventHandler<WebSocketMessageEvent> implements WebSocketHandler {
@@ -108,14 +103,14 @@ public class MessageEventWebSocketHandler extends AbstractRouteableEventHandler<
 		}
 	}
 
-	/**
+	/*
 	 * 给所有在线客户端群发消息
 	 */
 	public void broadcast(final TextMessage message) throws IOException {
 		this.broadcast(SessionFilter.ALL, message);
 	}
 
-	/**
+	/*
 	 * 给过滤器筛选后的在线客户端群发消息
 	 */
 	public void broadcast(final SessionFilter filter, final TextMessage message) throws IOException {

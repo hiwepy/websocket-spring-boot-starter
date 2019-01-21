@@ -14,7 +14,7 @@ import com.github.vindell.websocket.session.SessionFilter;
 
 public class WebSocketUtils {
 
-	/**
+	/*
 	 * 筛选过滤器匹配的WebSocketSession
 	 */
 	public static Map<String, WebSocketSession> sessions(final Map<String, WebSocketSession> sessionMap,final SessionFilter filter) throws IOException {
@@ -30,14 +30,14 @@ public class WebSocketUtils {
 		return filterSessionMap;
 	}
 	
-	/**
+	/*
 	 * 给所有在线客户端群发消息
 	 */
 	public static void broadcast(final Map<String, WebSocketSession> sessionMap,final TextMessage message) throws IOException {
 		broadcast(sessionMap, SessionFilter.ALL, message);
 	}
 	
-	/**
+	/*
 	 * 给过滤器筛选后的在线客户端群发消息
 	 */
 	public static void broadcast(final Map<String, WebSocketSession> sessionMap,final SessionFilter filter,final TextMessage message) throws IOException {
@@ -59,7 +59,7 @@ public class WebSocketUtils {
 		}
 	}
 	
-	/**
+	/*
 	 * 给某个client发送消息
 	 *
 	 * @param session
@@ -71,7 +71,7 @@ public class WebSocketUtils {
 		}
 	}
 
-	/**
+	/*
 	 * 给所有在线client发送消息 这里的message是client推送给服务端的请求信息，这里假设服务器推
 	 * 送系统当前时间给client，忽略client传过来的消息
 	 * 
@@ -87,7 +87,7 @@ public class WebSocketUtils {
 		}
 	}
 
-	/**
+	/*
 	 * 给所有在线client发送消息 这里的message是client推送给服务端的请求信息，这里假设服务器推
 	 * 送系统当前时间给client，忽略client传过来的消息
 	 * 

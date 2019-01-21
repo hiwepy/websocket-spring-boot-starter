@@ -19,12 +19,7 @@ import com.github.vindell.websocket.session.SessionOthersFilter;
 import com.github.vindell.websocket.utils.WebSocketUtils;
 
 /**
- * 
- * @className	： BroadcastWebSocketsHandler
- * @description	： 无客户端限制的在线广播Socket连接Handler：用于向所有在线用户推送通知消息，一对多
- * @author 		： <a href="https://github.com/vindell">vindell</a>
- * @date		： 2017年12月4日 下午12:11:20
- * @version 	V1.0
+ * 无客户端限制的在线广播Socket连接Handler：用于向所有在线用户推送通知消息，一对多
  */
 @SocketHandler("broadcast")
 public class BroadcastWebSocketsHandler extends TextWebSocketHandler {
@@ -106,14 +101,14 @@ public class BroadcastWebSocketsHandler extends TextWebSocketHandler {
 		}
 	}
 
-	/**
+	/*
 	 * 给所有在线客户端群发消息
 	 */
 	public void broadcast(final TextMessage message) throws IOException {
 		this.broadcast(filter, message);
 	}
 
-	/**
+	/*
 	 * 给过滤器筛选后的在线客户端群发消息
 	 */
 	public void broadcast(final SessionFilter filter, final TextMessage message) throws IOException {

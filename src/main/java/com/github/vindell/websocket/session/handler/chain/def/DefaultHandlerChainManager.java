@@ -85,7 +85,7 @@ public class DefaultHandlerChainManager implements HandlerChainManager<WebSocket
         }
     }
 
-    /**
+    /*
      * Splits the comma-delimited handler chain definition line into individual handler definition tokens.
      */
     protected String[] splitChainDefinition(String chainDefinition) {
