@@ -1,4 +1,4 @@
-# spring-boot-starter-websocket
+# websocket-spring-boot-starter
 
 
 ### 说明
@@ -14,8 +14,8 @@
 
 ``` xml
 <dependency>
-	<groupId>${project.groupId}</groupId>
-	<artifactId>spring-boot-starter-websocket</artifactId>
+	<groupId>com.github.hiwepy</groupId>
+	<artifactId>websocket-spring-boot-starter</artifactId>
 	<version>${project.version}</version>
 </dependency>
 ```
